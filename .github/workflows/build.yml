@@ -7,151 +7,87 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
-
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Create Android project
+      - name: Generate project
         run: |
-          mkdir -p app/src/main/java/com/example/finalapp
+          mkdir -p app/src/main/java/com/example/simpleapp
           mkdir -p app/src/main/res/layout
           mkdir -p app/src/main/res/values
-          mkdir -p gradle/wrapper
-
-          # 1. AndroidManifest.xml (完全符合 Android 12+)
-          cat > app/src/main/AndroidManifest.xml <<EOF
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application android:label="FinalApp">
-        <activity android:name=".MainActivity" android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
-</manifest>
-EOF
-
-          # 2. MainActivity.java
-          cat > app/src/main/java/com/example/finalapp/MainActivity.java <<EOF
-package com.example.finalapp;
-import android.app.Activity;
-import android.os.Bundle;
-import android.widget.TextView;
-public class MainActivity extends Activity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        TextView tv = new TextView(this);
-        tv.setText("Success from Claude!");
-        setContentView(tv);
-    }
-}
-EOF
-
-          # 3. 资源文件
-          cat > app/src/main/res/values/strings.xml <<EOF
-<resources>
-    <string name="app_name">FinalApp</string>
-</resources>
-EOF
-
-          cat > app/src/main/res/layout/activity_main.xml <<EOF
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello"/>
-</LinearLayout>
-EOF
-
-          # 4. build.gradle (项目根目录)
-          cat > build.gradle <<EOF
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.2'
-    }
-}
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-EOF
-
-          # 5. settings.gradle
-          cat > settings.gradle <<EOF
-rootProject.name = "FinalApp"
-include ':app'
-EOF
-
-          # 6. app/build.gradle
-          cat > app/build.gradle <<EOF
-plugins {
-    id 'com.android.application'
-}
-android {
-    namespace 'com.example.finalapp'
-    compileSdk 34
-    defaultConfig {
-        applicationId "com.example.finalapp"
-        minSdk 21
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        debug {
-            debuggable true
-        }
-    }
-}
-dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-}
-EOF
-
-          # 7. gradle.properties
-          cat > gradle.properties <<EOF
-org.gradle.jvmargs=-Xmx2048m
-android.useAndroidX=true
-android.enableJetifier=true
-EOF
-
-          # 8. Gradle Wrapper (固定使用 Gradle 8.2，与 AGP 8.2.2 完美搭配)
-          cat > gradle/wrapper/gradle-wrapper.properties <<EOF
-distributionBase=GRADLE_USER_HOME
-distributionPath=wrapper/dists
-distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip
-zipStoreBase=GRADLE_USER_HOME
-zipStorePath=wrapper/dist
-EOF
-          curl -L -o gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar
-          curl -L -o gradlew https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradlew
-          chmod +x gradlew
-
-      - name: Build APK with Gradle Wrapper
-        run: ./gradlew assembleDebug --no-daemon
-
+          echo '<?xml version="1.0" encoding="utf-8"?>' > app/src/main/AndroidManifest.xml
+          echo '<manifest xmlns:android="http://schemas.android.com/apk/res/android">' >> app/src/main/AndroidManifest.xml
+          echo '    <application android:label="SimpleApp">' >> app/src/main/AndroidManifest.xml
+          echo '        <activity android:name=".MainActivity" android:exported="true">' >> app/src/main/AndroidManifest.xml
+          echo '            <intent-filter>' >> app/src/main/AndroidManifest.xml
+          echo '                <action android:name="android.intent.action.MAIN" />' >> app/src/main/AndroidManifest.xml
+          echo '                <category android:name="android.intent.category.LAUNCHER" />' >> app/src/main/AndroidManifest.xml
+          echo '            </intent-filter>' >> app/src/main/AndroidManifest.xml
+          echo '        </activity>' >> app/src/main/AndroidManifest.xml
+          echo '    </application>' >> app/src/main/AndroidManifest.xml
+          echo '</manifest>' >> app/src/main/AndroidManifest.xml
+          echo 'package com.example.simpleapp;' > app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo 'import android.app.Activity;' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo 'import android.os.Bundle;' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo 'import android.widget.TextView;' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo 'public class MainActivity extends Activity {' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo '    @Override' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo '    protected void onCreate(Bundle savedInstanceState) {' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo '        super.onCreate(savedInstanceState);' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo '        TextView tv = new TextView(this);' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo '        tv.setText("Hello from Claude!");' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo '        setContentView(tv);' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo '    }' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo '}' >> app/src/main/java/com/example/simpleapp/MainActivity.java
+          echo '<resources><string name="app_name">SimpleApp</string></resources>' > app/src/main/res/values/strings.xml
+          echo '<?xml version="1.0" encoding="utf-8"?>' > app/src/main/res/layout/activity_main.xml
+          echo '<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"' >> app/src/main/res/layout/activity_main.xml
+          echo '    android:layout_width="match_parent"' >> app/src/main/res/layout/activity_main.xml
+          echo '    android:layout_height="match_parent"' >> app/src/main/res/layout/activity_main.xml
+          echo '    android:orientation="vertical">' >> app/src/main/res/layout/activity_main.xml
+          echo '    <TextView' >> app/src/main/res/layout/activity_main.xml
+          echo '        android:layout_width="wrap_content"' >> app/src/main/res/layout/activity_main.xml
+          echo '        android:layout_height="wrap_content"' >> app/src/main/res/layout/activity_main.xml
+          echo '        android:text="Hello"/>' >> app/src/main/res/layout/activity_main.xml
+          echo '</LinearLayout>' >> app/src/main/res/layout/activity_main.xml
+          echo 'buildscript {' > build.gradle
+          echo '    repositories { google(); mavenCentral() }' >> build.gradle
+          echo '    dependencies { classpath "com.android.tools.build:gradle:8.2.2" }' >> build.gradle
+          echo '}' >> build.gradle
+          echo 'allprojects {' >> build.gradle
+          echo '    repositories { google(); mavenCentral() }' >> build.gradle
+          echo '}' >> build.gradle
+          echo 'rootProject.name = "SimpleApp"' > settings.gradle
+          echo 'include ":app"' >> settings.gradle
+          echo 'plugins {' > app/build.gradle
+          echo '    id "com.android.application"' >> app/build.gradle
+          echo '}' >> app/build.gradle
+          echo 'android {' >> app/build.gradle
+          echo '    namespace "com.example.simpleapp"' >> app/build.gradle
+          echo '    compileSdk 34' >> app/build.gradle
+          echo '    defaultConfig {' >> app/build.gradle
+          echo '        applicationId "com.example.simpleapp"' >> app/build.gradle
+          echo '        minSdk 21' >> app/build.gradle
+          echo '        targetSdk 34' >> app/build.gradle
+          echo '        versionCode 1' >> app/build.gradle
+          echo '        versionName "1.0"' >> app/build.gradle
+          echo '    }' >> app/build.gradle
+          echo '    buildTypes { debug { debuggable true } }' >> app/build.gradle
+          echo '}' >> app/build.gradle
+          echo 'dependencies {' >> app/build.gradle
+          echo '    implementation "androidx.appcompat:appcompat:1.6.1"' >> app/build.gradle
+          echo '}' >> app/build.gradle
+          echo 'org.gradle.jvmargs=-Xmx2048m' > gradle.properties
+          echo 'android.useAndroidX=true' >> gradle.properties
+          echo 'android.enableJetifier=true' >> gradle.properties
+      - name: Build APK
+        run: gradle assembleDebug --no-daemon
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FinalApp-debug
+          name: SimpleApp-debug
           path: app/build/outputs/apk/debug/*.apk
